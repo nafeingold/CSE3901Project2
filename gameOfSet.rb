@@ -6,7 +6,6 @@
 # Colors: Green, Blue, Red
 # Shapes: Diamond, Tilde, Oval
 # Opacity: Transparent, Translucent, Opaque
-
 class Card
   attr_accessor :number, :color, :shape, :opacity
 
@@ -78,16 +77,45 @@ def check_set(card1, card2, card3)
         end
 end
 
+# checks the current deal to make sure there is at least one set present.
+# @param deal the current deal of cards
+def check_for_sets(deal)
+  set_present = false
+  all_combinations = deal.combination(3).to_a
+  i = 0
+  until set_present || (i == all_combinations.size - 1)
+    set_present = true if check_set(all_combinations[i][0], all_combinations[i][1], all_combinations[i][2])
+    i += 1
+  end
+  set_present
+end
 
 
-# c1 = Card.new('1', 'Green', 'Diamond', 'Transparent')
-# c2 = Card.new('2', 'Blue', 'Tilde', 'Shaded')
-# c3 = Card.new('3', 'Red', 'Oval', 'Filled')
-# puts(check_set(c1, c2, c3))
+# welcome the player to the game, get the number of players
+puts 'Welcome to the game of set!'
+puts 'You can have up to 4 players. How many would you like to have? (enter a number 1-4)'
+acceptable_player_count = false
+until acceptable_player_count
+  player_count = gets
+  pc = player_count.to_i
+  if pc > 0 && pc < 5
+    acceptable_player_count = true
+  else
+    puts 'That\'s not an acceptable number of players! Please try again with a number between 1 and 4.'
+  end
+end
+scores = Array.new(pc)
 
+# set up the deck and deal the first hand
 deck = create_deck
 deck = deck.shuffle
-deal = deck[0,11]
-deck.slice(0..11)
+deal = deck[0, 12]
+deck = deck.slice(12..81)
+puts 'First hand, coming up!'
 puts deal
+
+
+
+puts check_for_sets(deal)
+
 
